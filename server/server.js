@@ -10,8 +10,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/user", userRoutes);
 
-mongoose
+mongoose.connect(process.env.MONGO_URI,{
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  app.listen(process.env.PORT,() => console.log("success"))
+})
+.catch((err) => console.log(err.message))
+
+
+
+
+
+
+
+/* mongoose
   .connect("mongodb://localhost:27017/netflix", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -23,8 +39,7 @@ mongoose
     console.log(err.message);
   });
 
-app.use("/api/user", userRoutes);
-
 app.listen(5000, () => {
   console.log("server started on port 5000");
 });
+ */

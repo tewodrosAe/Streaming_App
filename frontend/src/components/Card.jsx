@@ -13,12 +13,12 @@ import { useDispatch } from "react-redux";
 import { removeMovieFromLiked } from "../store";
 import video from "../assets/video.mp4";
 
-export default React.memo(function Card({ index, movieData, isLiked = false }) {
+export default React.memo(function Card({ index, movieData, isInLiked}) {
+  const [isLiked,setIsLiked] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
   const [email, setEmail] = useState(undefined);
-
   onAuthStateChanged(firebaseAuth, (currentUser) => {
     if (currentUser) {
       setEmail(currentUser.email);
@@ -31,6 +31,7 @@ export default React.memo(function Card({ index, movieData, isLiked = false }) {
         email,
         data: movieData,
       });
+      setIsLiked(like => !like)
     } catch (error) {
       console.log(error);
     }
@@ -75,17 +76,20 @@ export default React.memo(function Card({ index, movieData, isLiked = false }) {
                 />
                 <RiThumbUpFill title="Like" />
                 <RiThumbDownFill title="Dislike" />
-                {isLiked ? (
+                {isLiked || isInLiked ? (
                   <BsCheck
                     title="Remove from List"
-                    onClick={() =>
+                    onClick={() =>{
                       dispatch(
                         removeMovieFromLiked({ movieId: movieData.id, email })
                       )
                     }
+                    }
                   />
                 ) : (
-                  <AiOutlinePlus title="Add to my list" onClick={addToList} />
+                  <AiOutlinePlus title="Add to my list" onClick={
+                    addToList  
+                  } />
                 )}
               </div>
               <div className="info">

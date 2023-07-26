@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import backgroundImage from "../assets/home.jpg";
-import MovieLogo from "../assets/homeTitle.webp";
+import MovieLogo from "../assets/homeTitle.png";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "../utils/firebase-config";
@@ -14,9 +14,9 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import Slider from "../components/Slider";
 function Netflix() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const movies = useSelector((state) => state.netflix.movies);
-  const genres = useSelector((state) => state.netflix.genres);
-  const genresLoaded = useSelector((state) => state.netflix.genresLoaded);
+  const movies = useSelector((state) => state.showey.movies);
+  const genres = useSelector((state) => state.showey.genres);
+  const genresLoaded = useSelector((state) => state.showey.genresLoaded);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -61,10 +61,12 @@ function Netflix() {
               <FaPlay />
               Play
             </button>
-            <button className="flex j-center a-center">
-              <AiOutlineInfoCircle />
-              More Info
-            </button>
+            <a href="https://www.imdb.com/title/tt12343534/" target="_blank">
+              <button className="flex j-center a-center">
+                <AiOutlineInfoCircle />
+                More Info
+              </button>
+            </a>
           </div>
         </div>
       </div>
@@ -78,25 +80,27 @@ const Container = styled.div`
   .hero {
     position: relative;
     .background-image {
-      filter: brightness(60%);
+      filter: brightness(50%);
     }
     img {
-      height: 100vh;
+      height: 105vh;
       width: 100vw;
     }
     .container {
       position: absolute;
       bottom: 5rem;
       .logo {
+        margin-bottom:-14rem;
         img {
           width: 100%;
           height: 100%;
-          margin-left: 5rem;
+          margin-left: -1rem;
         }
       }
       .buttons {
         margin: 5rem;
         gap: 2rem;
+        
         button {
           font-size: 1.4rem;
           gap: 1rem;
@@ -110,12 +114,16 @@ const Container = styled.div`
           &:hover {
             opacity: 0.8;
           }
-          &:nth-of-type(2) {
-            background-color: rgba(109, 109, 110, 0.7);
-            color: white;
-            svg {
-              font-size: 1.8rem;
-            }
+          
+          }
+          a{
+            text-decoration:none;
+            button {
+              background-color: rgba(109, 109, 110, 0.7);
+              color: white;
+              svg {
+                font-size: 1.8rem;
+              }
           }
         }
       }

@@ -10,7 +10,7 @@ import { getUsersLikedMovies } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function UserListedMovies() {
-  const movies = useSelector((state) => state.netflix.movies);
+  const movies = useSelector((state) => state.showey.movies);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -44,7 +44,7 @@ export default function UserListedMovies() {
                 movieData={movie}
                 index={index}
                 key={movie.id}
-                isLiked={true}
+                isInLiked={true}
               />
             );
           })}

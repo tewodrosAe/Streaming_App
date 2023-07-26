@@ -3,7 +3,7 @@ const User = require("../models/UserModel");
 module.exports.getLikedMovies = async (req, res) => {
   try {
     const { email } = req.params;
-    const user = await await User.findOne({ email });
+    const user = await User.findOne({ email });
     if (user) {
       return res.json({ msg: "success", movies: user.likedMovies });
     } else return res.json({ msg: "User with given email not found." });
@@ -41,10 +41,11 @@ module.exports.removeFromLikedMovies = async (req, res) => {
     const user = await User.findOne({ email });
     if (user) {
       const movies = user.likedMovies;
-      const movieIndex = movies.findIndex(({ id }) => id === movieId);
+      const movieIndex = movies.findIndex(({id}) => id === movieId);
       if (!movieIndex) {
         res.status(400).send({ msg: "Movie not found." });
       }
+      console.log(movieIndex)
       movies.splice(movieIndex, 1);
       await User.findByIdAndUpdate(
         user._id,
