@@ -2,7 +2,7 @@ import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC2G-hRrF2ijZ-SledXnjMGhzZm97yEE9E",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "streaming-app-d8aaf.firebaseapp.com",
   projectId: "streaming-app-d8aaf",
   storageBucket: "streaming-app-d8aaf.appspot.com",
