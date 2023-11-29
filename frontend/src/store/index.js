@@ -4,7 +4,11 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import axios from "axios";
-import { API_KEY, TMDB_BASE_URL } from "../utils/constants";
+
+const API_KEY = process.env.REACT_APP_API_KEY
+const TMDB_BASE_URL = process.env.REACT_APP_TMDB_BASE_URL
+
+console.log(TMDB_BASE_URL, API_KEY)
 
 const initialState = {
   movies: [],

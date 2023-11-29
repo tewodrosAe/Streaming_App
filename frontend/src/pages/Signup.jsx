@@ -1,33 +1,35 @@
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
-} from "firebase/auth";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import BackgroundImage from "../components/BackgroundImage";
-import Header from "../components/Header";
-import { firebaseAuth } from "../utils/firebase-config";
+} from 'firebase/auth'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
+import BackgroundImage from '../components/BackgroundImage'
+import Header from '../components/Header'
+import { firebaseAuth } from '../utils/firebase-config'
 function Signup() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
   const [formValues, setFormValues] = useState({
-    email: "",
-    password: "",
-  });
-  const navigate = useNavigate();
+    email: '',
+    password: '',
+  })
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const handleSignIn = async () => {
+    setError('')
     try {
-      const { email, password } = formValues;
-      await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      const { email, password } = formValues
+      await createUserWithEmailAndPassword(firebaseAuth, email, password)
     } catch (error) {
-      console.log(error);
+      setError(error.message.split(' ')[2].replace(/[{()}]/g, '').split('/')[1])
     }
-  };
+  }
 
   onAuthStateChanged(firebaseAuth, (currentUser) => {
-    if (currentUser) navigate("/");
-  });
+    if (currentUser) navigate('/')
+  })
 
   return (
     <Container showPassword={showPassword}>
@@ -73,11 +75,12 @@ function Signup() {
               <button onClick={() => setShowPassword(true)}>Get Started</button>
             )}
           </div>
-          {showPassword && <button onClick={handleSignIn}>Log In</button>}
+          {error !== '' && <div className="error"> * {error} * </div>}
+          {showPassword && <button onClick={handleSignIn}>Signup</button>}
         </div>
       </div>
     </Container>
-  );
+  )
 }
 
 const Container = styled.div`
@@ -86,13 +89,23 @@ const Container = styled.div`
     position: absolute;
     top: 0;
     left: 0;
-    background: linear-gradient(rgba(0,0,0,0.7),rgba(255,255,255,0.1),rgba(0,0,0,0.7));
+    background: linear-gradient(
+      rgba(0, 0, 0, 0.7),
+      rgba(255, 255, 255, 0.1),
+      rgba(0, 0, 0, 0.7)
+    );
     height: 100vh;
     width: 100vw;
     display: grid;
     grid-template-rows: 15vh 85vh;
     .body {
       gap: 1rem;
+      .error {
+        color: rgb(200, 10, 50);
+        font-size: 0.9rem;
+        background:rgba(0,0,0,0.8);
+        padding: 4px;
+      }
       .text {
         gap: 1rem;
         text-align: center;
@@ -100,11 +113,11 @@ const Container = styled.div`
           padding: 0 25rem;
           font-size: 3rem;
         }
-        h4{
+        h4 {
           font-size: 2rem;
           font-weight: 500;
         }
-        h6{
+        h6 {
           font-size: 1rem;
           font-weight: 500;
         }
@@ -112,22 +125,22 @@ const Container = styled.div`
       .form {
         display: grid;
         grid-template-columns: ${({ showPassword }) =>
-          showPassword ? "1fr 1fr" : "2fr 1fr"};
+          showPassword ? '1fr 1fr' : '2fr 1fr'};
         width: 50%;
         input {
           color: white;
           padding: 0.8rem;
-          background: rgba(0,0,0,0.4);
+          background: rgba(0, 0, 0, 0.4);
           font-size: 1rem;
           font-weight: 600;
-          border: 1px solid rgba(255,255,255,0.3);
+          border: 1px solid rgba(255, 255, 255, 0.3);
           &:focus {
             outline: none;
           }
         }
         button {
           padding: 0.5rem 1rem;
-          background-color: #7A26C1;
+          background-color: #7a26c1;
           border: none;
           cursor: pointer;
           color: white;
@@ -137,7 +150,7 @@ const Container = styled.div`
       }
       button {
         padding: 0.5rem 1rem;
-        background-color: #7A26C1;
+        background-color: #7a26c1;
         border: none;
         cursor: pointer;
         color: white;
@@ -147,6 +160,6 @@ const Container = styled.div`
       }
     }
   }
-`;
+`
 
-export default Signup;
+export default Signup

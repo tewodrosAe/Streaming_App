@@ -10,12 +10,13 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState('')
 
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(firebaseAuth, email, password);
     } catch (error) {
-      console.log(error.code);
+      setError(error.code);
     }
   };
 
@@ -46,6 +47,7 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
               />
+              {error !== '' && <div className="error"> * {error} * </div>}
               <button onClick={handleLogin}>Login to your account</button>
             </div>
           </div>
@@ -68,6 +70,13 @@ const Container = styled.div`
     .form-container {
       gap: 2rem;
       height: 85vh;
+      .error {
+        color: rgb(200, 10, 50);
+        font-size: 0.9rem;
+        background:rgba(0,0,0,0.8);
+        padding: 4px;
+        font-weight: bold;
+      }
       .form {
         padding: 4rem;
         padding-bottom:6rem;
