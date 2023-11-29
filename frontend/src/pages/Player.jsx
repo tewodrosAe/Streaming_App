@@ -1,10 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { BsArrowLeft } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
-import video from "../assets/video.mp4";
+import { useLocation, useNavigate } from "react-router-dom";
+/* import video from "../assets/video.mp4"; */
+
 export default function Player() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const id = location.state?.id;
 
   return (
     <Container>
@@ -12,7 +15,7 @@ export default function Player() {
         <div className="back">
           <BsArrowLeft onClick={() => navigate(-1)} />
         </div>
-        <video src={video} autoPlay loop controls muted />
+        <iframe src={`https://autoembed.to/movie/tmdb/${id}`} title="yo"autoPlay loop controls muted />
       </div>
     </Container>
   );
@@ -31,7 +34,7 @@ const Container = styled.div`
         cursor: pointer;
       }
     }
-    video {
+    iframe {
       height: 100%;
       width: 100%;
       object-fit: cover;

@@ -11,7 +11,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "../utils/firebase-config";
 import { useDispatch } from "react-redux";
 import { removeMovieFromLiked } from "../store";
-import video from "../assets/video.mp4";
+/* import video from "../assets/video.mp4"; */
 
 export default React.memo(function Card({ index, movieData, isInLiked}) {
   const [isLiked,setIsLiked] = useState(false)
@@ -36,12 +36,13 @@ export default React.memo(function Card({ index, movieData, isInLiked}) {
       console.log(error);
     }
   };
-
+ 
   return (
     <Container
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+
       <img
         src={`https://image.tmdb.org/t/p/w500${movieData.image}`}
         alt="card"
@@ -57,11 +58,13 @@ export default React.memo(function Card({ index, movieData, isInLiked}) {
               onClick={() => navigate("/player")}
             />
             <video
-              src={video}
+              src={`https://autoembed.to/movie/tmdb/299534`}
               autoPlay={true}
               loop
               muted
-              onClick={() => navigate("/player")}
+              onClick={() => navigate("/player",{
+                state: { myVariable: '12345' },
+              })}
             />
           </div>
           <div className="info-container flex column">
@@ -72,7 +75,9 @@ export default React.memo(function Card({ index, movieData, isInLiked}) {
               <div className="controls flex">
                 <IoPlayCircleSharp
                   title="Play"
-                  onClick={() => navigate("/player")}
+                  onClick={() => navigate("/player",{
+                    state: { id:movieData.id },
+                  })}
                 />
                 <RiThumbUpFill title="Like" />
                 <RiThumbDownFill title="Dislike" />
