@@ -5,6 +5,7 @@ import BackgroundImage from "../components/BackgroundImage";
 import Header from "../components/Header";
 import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../utils/firebase-config";
+import axios from "axios";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -14,7 +15,9 @@ function Login() {
 
   const handleLogin = async () => {
     try {
+      const user = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`,{email})
       await signInWithEmailAndPassword(firebaseAuth, email, password);
+      localStorage.setItem('streamer', JSON.stringify(user.data.token))
     } catch (error) {
       setError(error.code);
     }
@@ -36,7 +39,7 @@ function Login() {
             </div>
             <div className="container flex column">
               <input
-                type="text"
+                type="email"
                 placeholder="Email"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
@@ -68,6 +71,7 @@ const Container = styled.div`
     background: linear-gradient(rgba(0,0,0,0.7),rgba(255,255,255,0.1),rgba(0,0,0,0.7));
     grid-template-rows: 15vh 85vh;
     .form-container {
+      margin: 0 2vw;
       gap: 2rem;
       height: 85vh;
       .error {
@@ -82,7 +86,7 @@ const Container = styled.div`
         padding-bottom:6rem;
         background: rgba(255,255,255,0.2);
         backdrop-filter:blur(4px);
-        width: 25vw;
+        width: 320px;
         gap: 1rem;
         margin-top:2rem;
         color: white;

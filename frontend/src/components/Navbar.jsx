@@ -5,17 +5,13 @@ import styled from "styled-components";
 import logo from "../assets/logo1.png"
 import { firebaseAuth } from "../utils/firebase-config";
 import { FaPowerOff, FaSearch } from "react-icons/fa";
+import MobileNav from "./MobileNav";
+import { links } from "../constants";
 
 export default function Navbar({ isScrolled }) {
   const [showSearch, setShowSearch] = useState(false);
   const [inputHover, setInputHover] = useState(false);
-  const links = [
-    { name: "Home", link: "/" },
-    { name: "TV Shows", link: "/tv" },
-    { name: "Movies", link: "/movies" },
-    { name: "My List", link: "/mylist" },
-  ];
-
+  
   return (
     <Container>
       <nav className={`${isScrolled ? "scrolled" : ""} flex`}>
@@ -56,9 +52,10 @@ export default function Navbar({ isScrolled }) {
               }}
             />
           </div>
-          <button onClick={() => signOut(firebaseAuth)}>
+          <button id='logout' onClick={() => {signOut(firebaseAuth); localStorage.removeItem('streamer')}}>
             <FaPowerOff />
           </button>
+          <MobileNav/>
         </div>
       </nav>
     </Container>
@@ -97,10 +94,18 @@ const Container = styled.div`
             text-decoration: none;
           }
         }
+        @media only screen and (max-width: 768px){
+          display:none;
+        }
       }
     }
     .right {
       gap: 1rem;
+      #logout{
+        @media only screen and (max-width: 768px){
+          display:none;
+        }
+      }
       button {
         background-color: transparent;
         border: none;

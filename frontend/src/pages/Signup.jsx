@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import BackgroundImage from '../components/BackgroundImage'
 import Header from '../components/Header'
 import { firebaseAuth } from '../utils/firebase-config'
+import axios from 'axios'
 function Signup() {
   const [showPassword, setShowPassword] = useState(false)
   const [formValues, setFormValues] = useState({
@@ -21,7 +22,9 @@ function Signup() {
     setError('')
     try {
       const { email, password } = formValues
+      const user = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/create`,{email})
       await createUserWithEmailAndPassword(firebaseAuth, email, password)
+      localStorage.setItem('streamer', JSON.stringify(user.data.token))
     } catch (error) {
       setError(error.message.split(' ')[2].replace(/[{()}]/g, '').split('/')[1])
     }
@@ -110,15 +113,15 @@ const Container = styled.div`
         gap: 1rem;
         text-align: center;
         h1 {
-          padding: 0 25rem;
-          font-size: 3rem;
+          padding: 0 2vw;
+          font-size: clamp(40px, 8vw, 3.5rem);
         }
         h4 {
-          font-size: 2rem;
+          font-size: clamp(30px, 6vw, 2rem);
           font-weight: 500;
         }
         h6 {
-          font-size: 1rem;
+          font-size: clamp(18px, 4vw, 1rem);
           font-weight: 500;
         }
       }
@@ -126,7 +129,14 @@ const Container = styled.div`
         display: grid;
         grid-template-columns: ${({ showPassword }) =>
           showPassword ? '1fr 1fr' : '2fr 1fr'};
-        width: 50%;
+        @media only screen and (min-width: 700px){
+          width: 50%;
+        }
+        @media only screen and (max-width: 480px){
+          display:flex;
+          flex-direction:column;
+          gap:2vh;
+        }
         input {
           color: white;
           padding: 0.8rem;

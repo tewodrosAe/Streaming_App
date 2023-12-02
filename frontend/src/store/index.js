@@ -4,17 +4,26 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import axios from "axios";
+import { getToken } from "../utils";
 
 const API_KEY = process.env.REACT_APP_API_KEY
 const TMDB_BASE_URL = process.env.REACT_APP_TMDB_BASE_URL
-
-console.log(TMDB_BASE_URL, API_KEY)
 
 const initialState = {
   movies: [],
   genresLoaded: false,
   genres: [],
+  list:{
+    liked:[],
+    watchlist:[]
+  }
 };
+
+const instance = axios.create({
+  baseURL: `${process.env.REACT_APP_BACKEND_URL}`,
+  timeout: 1000,
+  headers: {'Authorization': 'Bearer '+ getToken()}
+});
 
 export const getGenres = createAsyncThunk("showey/genres", async () => {
   const {
@@ -80,29 +89,52 @@ export const fetchMovies = createAsyncThunk(
   }
 );
 
-export const getUsersLikedMovies = createAsyncThunk(
-  "showey/getLiked",
-  async (email) => {
-    const {data} = await axios.get(`http://localhost:5000/api/user/liked/${email}`);
-    const movies = await data.movies
-    return movies
-  }
-  
-);
-
-export const removeMovieFromLiked = createAsyncThunk(
+export const removeLikedMovie = createAsyncThunk(
   "showey/deleteLiked",
-  async ({ movieId, email }) => {
+  async ({ movieId }) => {
     const {
-      data: { movies },
-    } = await axios.put("http://localhost:5000/api/user/remove", {
-      email,
-      movieId,
+      data: { likedMovies },
+    } = await instance.put("/removeliked", {
+      id: movieId
     });
-    return movies;
+    return likedMovies;
   }
 );
 
+export const addLikedMovie = createAsyncThunk(
+  "showey/addLiked",
+  async ({ movieData }) => {
+    const {
+      data: { likedMovies },
+    } = await instance.put("/addliked", {
+      data: movieData
+    });
+    return likedMovies;
+  }
+);
+export const removeWatchList = createAsyncThunk(
+  "showey/removeWatch",
+  async ({ movieId }) => {
+    const {
+      data: { watchList },
+    } = await instance.put("/removewatch", {
+      id: movieId
+    });
+    return watchList;
+  }
+);
+
+export const addWatchList = createAsyncThunk(
+  "showey/addWatch",
+  async ({ movieData }) => {
+    const {
+      data: { watchList },
+    } = await instance.put("/addwatch", {
+      data: movieData
+    });
+    return watchList;
+  }
+);
 const ShoweySlice = createSlice({
   name: "Showey",
   initialState,
@@ -117,12 +149,18 @@ const ShoweySlice = createSlice({
     builder.addCase(fetchDataByGenre.fulfilled, (state, action) => {
       state.movies = action.payload;
     });
-    builder.addCase(getUsersLikedMovies.fulfilled, (state, action) => {
-      state.movies = action.payload;
-    });
-    builder.addCase(removeMovieFromLiked.fulfilled, (state, action) => {
-      state.movies = action.payload;
-    });
+    builder.addCase(addLikedMovie.fulfilled, (state,action) => {
+      state.list.liked = action.payload
+    })
+    builder.addCase(removeLikedMovie.fulfilled, (state,action) => {
+      state.list.liked = action.payload
+    })
+    builder.addCase(addWatchList.fulfilled, (state,action) => {
+      state.list.watchlist = action.payload
+    })
+    builder.addCase(removeWatchList.fulfilled, (state,action) => {
+      state.list.watchlist = action.payload
+    })
   },
 });
 

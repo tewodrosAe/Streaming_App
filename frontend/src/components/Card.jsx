@@ -3,40 +3,29 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IoPlayCircleSharp } from "react-icons/io5";
 import { AiOutlinePlus } from "react-icons/ai";
-import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
-import { BiChevronDown } from "react-icons/bi";
+import { RiThumbUpFill} from "react-icons/ri";
 import { BsCheck } from "react-icons/bs";
-import axios from "axios";
-import { onAuthStateChanged } from "firebase/auth";
-import { firebaseAuth } from "../utils/firebase-config";
 import { useDispatch } from "react-redux";
-import { removeMovieFromLiked } from "../store";
+import { addLikedMovie, addWatchList, removeLikedMovie, removeWatchList } from "../store";
+
 /* import video from "../assets/video.mp4"; */
 
 export default React.memo(function Card({ index, movieData, isInLiked}) {
   const [isLiked,setIsLiked] = useState(false)
+  const [isWatchList,setIsWatchList] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
-  const [email, setEmail] = useState(undefined);
-  onAuthStateChanged(firebaseAuth, (currentUser) => {
-    if (currentUser) {
-      setEmail(currentUser.email);
-    } else navigate("/login");
-  });
 
-  const addToList = async () => {
-    try {
-      await axios.post("http://localhost:5000/api/user/add", {
-        email,
-        data: movieData,
-      });
-      setIsLiked(like => !like)
-    } catch (error) {
-      console.log(error);
+  const liked = () => {
+    if(!isLiked){
+      dispatch(addLikedMovie({movieData}))
+      setIsLiked(true)
+    }else{
+      dispatch(removeLikedMovie({movieId: movieData.id}))
+      setIsLiked(false)
     }
-  };
- 
+  }
   return (
     <Container
       onMouseEnter={() => setIsHovered(true)}
@@ -79,26 +68,24 @@ export default React.memo(function Card({ index, movieData, isInLiked}) {
                     state: { id:movieData.id },
                   })}
                 />
-                <RiThumbUpFill title="Like" />
-                <RiThumbDownFill title="Dislike" />
-                {isLiked || isInLiked ? (
+                <RiThumbUpFill title="Like" color={isLiked ? 'red' : 'white'} onClick={liked}/>
+                {isWatchList || isInLiked ? (
                   <BsCheck
                     title="Remove from List"
                     onClick={() =>{
-                      dispatch(
-                        removeMovieFromLiked({ movieId: movieData.id, email })
-                      )
+                      dispatch(removeWatchList({movieId: movieData.id}))
+                      setIsWatchList(false)
                     }
                     }
                   />
                 ) : (
                   <AiOutlinePlus title="Add to my list" onClick={
-                    addToList  
+                    () => {
+                      dispatch(addWatchList({movieData}))
+                      setIsWatchList(true)
+                    }
                   } />
                 )}
-              </div>
-              <div className="info">
-                <BiChevronDown title="More Info" />
               </div>
             </div>
             <div className="genres flex">

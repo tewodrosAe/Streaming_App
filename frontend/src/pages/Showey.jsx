@@ -44,11 +44,6 @@ function Netflix() {
     <Container>
       <Navbar isScrolled={isScrolled} />
       <div className="hero">
-        <img
-          src={backgroundImage}
-          alt="background"
-          className="background-image"
-        />
         <div className="container">
           <div className="logo">
             <img src={MovieLogo} alt="Movie Logo" />
@@ -61,7 +56,7 @@ function Netflix() {
               <FaPlay />
               Play
             </button>
-            <a href="https://www.imdb.com/title/tt12343534/" target="_blank">
+            <a href="https://www.imdb.com/title/tt12343534/" rel="noreferrer" target="_blank">
               <button className="flex j-center a-center">
                 <AiOutlineInfoCircle />
                 More Info
@@ -75,13 +70,15 @@ function Netflix() {
   );
 }
 
-const Container = styled.div`
-  background-color: black;
-  .hero {
+const Container = styled.div`\
+background: black;
+.hero {
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(${backgroundImage});
+    background-size:cover;
+    background-position:center;
+    height:100vh;
+    width:100vw;
     position: relative;
-    .background-image {
-      filter: brightness(50%);
-    }
     img {
       height: 105vh;
       width: 100vw;
@@ -91,6 +88,9 @@ const Container = styled.div`
       bottom: 5rem;
       .logo {
         margin-bottom:-14rem;
+        @media only screen and (max-width: 460px){
+          margin-bottom:-10rem
+        }
         img {
           width: 100%;
           height: 100%;
@@ -100,14 +100,15 @@ const Container = styled.div`
       .buttons {
         margin: 5rem;
         gap: 2rem;
-        
+        display:flex;
+        @media only screen and (max-width: 460px){
+          flex-direction: column;
+        }
         button {
           font-size: 1.4rem;
           gap: 1rem;
           border-radius: 0.2rem;
-          padding: 0.5rem;
-          padding-left: 2rem;
-          padding-right: 2.4rem;
+          padding: 0.5rem 2.5rem;
           border: none;
           cursor: pointer;
           transition: 0.2s ease-in-out;
