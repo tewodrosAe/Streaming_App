@@ -46,6 +46,7 @@ const createArrayFromRawData = (array, moviesArray, genres) => {
         id: movie.id,
         name: movie?.original_name ? movie.original_name : movie.original_title,
         image: movie.backdrop_path,
+        type: movie.media_type,
         genres: movieGenres.slice(0, 3),
       });
   });
@@ -74,7 +75,6 @@ export const fetchDataByGenre = createAsyncThunk(
     );
   }
 );
-
 export const fetchMovies = createAsyncThunk(
   "showey/trending",
   async ({ type }, thunkAPI) => {
@@ -135,6 +135,15 @@ export const addWatchList = createAsyncThunk(
     return watchList;
   }
 );
+export const getList = createAsyncThunk(
+  "showey/getList",
+  async () => {
+    const {
+      data: { likedMovies, watchList },
+    } = await instance.get("/");
+    return {likedMovies,watchList};
+  }
+);
 const ShoweySlice = createSlice({
   name: "Showey",
   initialState,
@@ -160,6 +169,10 @@ const ShoweySlice = createSlice({
     })
     builder.addCase(removeWatchList.fulfilled, (state,action) => {
       state.list.watchlist = action.payload
+    })
+    builder.addCase(getList.fulfilled, (state,action) => {
+      state.list.watchlist = action.payload.watchList
+      state.list.liked = action.payload.likedMovies
     })
   },
 });

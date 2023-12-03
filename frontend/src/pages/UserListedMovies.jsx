@@ -6,31 +6,43 @@ import Card from "../components/Card";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import { useDispatch, useSelector } from "react-redux";
+import { getList } from "../store";
 
 export default function UserListedMovies() {
-  const movies = useSelector((state) => state.showey.movies);
+  const { list } = useSelector((state) => state.showey);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [email, setEmail] = useState(undefined);
-
-  onAuthStateChanged(firebaseAuth, (currentUser) => {
-    if (currentUser) setEmail(currentUser.email);
-    else navigate("/login");
-  });
 
   window.onscroll = () => {
     setIsScrolled(window.pageYOffset === 0 ? false : true);
     return () => (window.onscroll = null);
   };
+  useEffect(() => {
+    dispatch(getList())
+  },[dispatch])
 
   return (
     <Container>
       <Navbar isScrolled={isScrolled} />
       <div className="content flex column">
-        <h1>My List</h1>
+        <h1>Wacth List</h1>
         <div className="grid flex">
-          {movies.map((movie, index) => {
+          {list.watchlist.map((movie, index) => {
+            return (
+              <Card
+                movieData={movie}
+                index={index}
+                key={movie.id}
+                isInWatchList={true}
+              />
+            );
+          })}
+        </div>
+      </div>
+      <div className="content flex column">
+        <h1>Liked Movies</h1>
+        <div className="grid flex">
+          {list.liked.map((movie, index) => {
             return (
               <Card
                 movieData={movie}

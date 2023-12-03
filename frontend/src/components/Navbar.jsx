@@ -1,17 +1,24 @@
 import { signOut } from "firebase/auth";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../assets/logo1.png"
 import { firebaseAuth } from "../utils/firebase-config";
 import { FaPowerOff, FaSearch } from "react-icons/fa";
 import MobileNav from "./MobileNav";
 import { links } from "../constants";
+import { useDispatch } from "react-redux";
 
 export default function Navbar({ isScrolled }) {
   const [showSearch, setShowSearch] = useState(false);
   const [inputHover, setInputHover] = useState(false);
-  
+  const [search, setSearch] = useState('')
+  const navigate = useNavigate()
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    navigate(`/search/${search}`)
+  }
   return (
     <Container>
       <nav className={`${isScrolled ? "scrolled" : ""} flex`}>
@@ -30,7 +37,19 @@ export default function Navbar({ isScrolled }) {
           </ul>
         </div>
         <div className="right flex a-center">
-          <div className={`search ${showSearch ? "show-search" : ""}`}>
+          <form onSubmit={handleSearch} className={`search ${showSearch ? "show-search" : ""}`}>
+            <input
+              type="text"
+              placeholder="Search"
+              onMouseEnter={() => setInputHover(true)}
+              onMouseLeave={() => setInputHover(false)}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onBlur={() => {
+                setShowSearch(false);
+                setInputHover(false);
+              }}
+            />
             <button
               onFocus={() => setShowSearch(true)}
               onBlur={() => {
@@ -41,17 +60,7 @@ export default function Navbar({ isScrolled }) {
             >
               <FaSearch />
             </button>
-            <input
-              type="text"
-              placeholder="Search"
-              onMouseEnter={() => setInputHover(true)}
-              onMouseLeave={() => setInputHover(false)}
-              onBlur={() => {
-                setShowSearch(false);
-                setInputHover(false);
-              }}
-            />
-          </div>
+          </form>
           <button id='logout' onClick={() => {signOut(firebaseAuth); localStorage.removeItem('streamer')}}>
             <FaPowerOff />
           </button>

@@ -10,12 +10,13 @@ import { addLikedMovie, addWatchList, removeLikedMovie, removeWatchList } from "
 
 /* import video from "../assets/video.mp4"; */
 
-export default React.memo(function Card({ index, movieData, isInLiked}) {
+export default React.memo(function Card({ index, movieData, isInLiked,isInWatchList, search}) {
   const [isLiked,setIsLiked] = useState(false)
   const [isWatchList,setIsWatchList] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
+  const hasImage = (movieData?.backdrop_path !== null && movieData?.backdrop_path !== undefined) || !search
 
   const liked = () => {
     if(!isLiked){
@@ -33,7 +34,8 @@ export default React.memo(function Card({ index, movieData, isInLiked}) {
     >
 
       <img
-        src={`https://image.tmdb.org/t/p/w500${movieData.image}`}
+        src={ hasImage ? `https://image.tmdb.org/t/p/w500${!search ? movieData.image : movieData.backdrop_path}`:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1500px-No-Image-Placeholder.svg.png'}
+        style={ {height:!hasImage && '130px', filter: !hasImage && 'brightness(20%)'}}
         alt="card"
         onClick={() => navigate("/player")}
       />
@@ -42,7 +44,7 @@ export default React.memo(function Card({ index, movieData, isInLiked}) {
         <div className="hover">
           <div className="image-video-container">
             <img
-              src={`https://image.tmdb.org/t/p/w500${movieData.image}`}
+              src={hasImage ? `https://image.tmdb.org/t/p/w500${!search ? movieData.image : movieData.backdrop_path}`:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1500px-No-Image-Placeholder.svg.png'}
               alt="card"
               onClick={() => navigate("/player")}
             />
@@ -58,18 +60,18 @@ export default React.memo(function Card({ index, movieData, isInLiked}) {
           </div>
           <div className="info-container flex column">
             <h3 className="name" onClick={() => navigate("/player")}>
-              {movieData.name}
+              {!search || movieData.media_type !== 'movie' ? movieData.name : movieData.title}
             </h3>
             <div className="icons flex j-between">
               <div className="controls flex">
                 <IoPlayCircleSharp
                   title="Play"
                   onClick={() => navigate("/player",{
-                    state: { id:movieData.id },
+                    state: { id:movieData.id, type: movieData.type },
                   })}
                 />
-                <RiThumbUpFill title="Like" color={isLiked ? 'red' : 'white'} onClick={liked}/>
-                {isWatchList || isInLiked ? (
+                <RiThumbUpFill title="Like" color={isLiked || isInLiked ? 'red' : 'white'} onClick={liked}/>
+                {isWatchList || isInWatchList ? (
                   <BsCheck
                     title="Remove from List"
                     onClick={() =>{
@@ -90,7 +92,7 @@ export default React.memo(function Card({ index, movieData, isInLiked}) {
             </div>
             <div className="genres flex">
               <ul className="flex">
-                {movieData.genres.map((genre) => (
+                {!search && movieData.genres.map((genre) => (
                   <li>{genre}</li>
                 ))}
               </ul>
@@ -154,6 +156,8 @@ const Container = styled.div`
     .icons {
       .controls {
         display: flex;
+        width:50%;
+        justify-content: space-between;
         gap: 1rem;
       }
       svg {

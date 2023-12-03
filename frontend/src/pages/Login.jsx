@@ -13,7 +13,8 @@ function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState('')
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault()
     try {
       const user = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`,{email})
       await signInWithEmailAndPassword(firebaseAuth, email, password);
@@ -32,7 +33,7 @@ function Login() {
       <BackgroundImage />
       <div className="content">
         <Header />
-        <div className="form-container flex column a-center">
+        <form className="form-container flex column a-center" onSubmit={handleLogin}>
           <div className="form flex column a-center j-center">
             <div className="title">
               <h3>Login</h3>
@@ -51,10 +52,10 @@ function Login() {
                 value={password}
               />
               {error !== '' && <div className="error"> * {error} * </div>}
-              <button onClick={handleLogin}>Login to your account</button>
+              <button type="submit">Login to your account</button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </Container>
   );

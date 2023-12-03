@@ -18,7 +18,8 @@ function Signup() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (e) => {
+    e.preventDefault()
     setError('')
     try {
       const { email, password } = formValues
@@ -47,7 +48,7 @@ function Signup() {
               Ready to watch? Enter your email to create or restart membership.
             </h6>
           </div>
-          <div className="form">
+          <form className="form" onSubmit={handleSignIn}>
             <input
               type="email"
               placeholder="Email address"
@@ -59,6 +60,7 @@ function Signup() {
               }
               name="email"
               value={formValues.email}
+              required
             />
             {showPassword && (
               <input
@@ -72,14 +74,15 @@ function Signup() {
                 }
                 name="password"
                 value={formValues.password}
+                required
               />
             )}
             {!showPassword && (
               <button onClick={() => setShowPassword(true)}>Get Started</button>
             )}
-          </div>
-          {error !== '' && <div className="error"> * {error} * </div>}
-          {showPassword && <button onClick={handleSignIn}>Signup</button>}
+            {error !== '' && <div className="error"> * {error} * </div>}
+            {showPassword && <button type='submit'>Signup</button>}
+          </form>
         </div>
       </div>
     </Container>

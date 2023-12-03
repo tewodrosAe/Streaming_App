@@ -66,7 +66,6 @@ const removeFromLikedMovies = async (req, res) => {
         {$pull : {likedMovies: {id: id}}},
         {new: true}
       )
-      console.log(updated)
       res.status(200).json(updated)
     }}catch(e){
       res.status(400).json({error:e})
@@ -75,7 +74,6 @@ const removeFromLikedMovies = async (req, res) => {
 const addToWatchList = async (req, res) => {
   const { email } = req.user
   const { data } = req.body
-  console.log(data)
   try {
     const user = await User.find({email,'watchList.id' : data.id});
     if (user.length > 0) {
@@ -105,7 +103,6 @@ const removeFromWatchList = async (req, res) => {
         {$pull : {watchList: {id: id}}},
         {new: true}
       )
-      console.log(updated)
       res.status(200).json(updated)
     }}catch(e){
       res.status(400).json({error:e})
