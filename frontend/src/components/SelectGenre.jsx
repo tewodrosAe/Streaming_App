@@ -29,9 +29,16 @@ export default function SelectGenre({ genres, type }) {
 }
 
 const Select = styled.select`
+  padding:0.2rem 0.8rem;
+  border-radius: 5px;
   margin-left: 5rem;
   cursor: pointer;
-  font-size: 1.4rem;
+  font-size: 1.22rem;
   background-color: rgba(0, 0, 0, 0.4);
   color: white;
+  border: #ffffff55 1px solid;
+  border-bottom: #ffffff15 1px solid;
+  option{
+    background:black;
+  }
 `;

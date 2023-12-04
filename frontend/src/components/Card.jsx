@@ -17,7 +17,6 @@ export default React.memo(function Card({ index, movieData, isInLiked,isInWatchL
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
   const hasImage = (movieData?.backdrop_path !== null && movieData?.backdrop_path !== undefined) || !search
-
   const liked = () => {
     if(!isLiked){
       dispatch(addLikedMovie({movieData}))
@@ -28,79 +27,83 @@ export default React.memo(function Card({ index, movieData, isInLiked,isInWatchL
     }
   }
   return (
-    <Container
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <>
+      { movieData?.media_type !== 'person' &&
+      <Container
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
 
-      <img
-        src={ hasImage ? `https://image.tmdb.org/t/p/w500${!search ? movieData.image : movieData.backdrop_path}`:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1500px-No-Image-Placeholder.svg.png'}
-        style={ {height:!hasImage && '130px', filter: !hasImage && 'brightness(20%)'}}
-        alt="card"
-        onClick={() => navigate("/player")}
-      />
+        <img
+          src={ hasImage ? `https://image.tmdb.org/t/p/w500${!search ? movieData.image : movieData.backdrop_path}`:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1500px-No-Image-Placeholder.svg.png'}
+          style={ {height:!hasImage && '130px', filter: !hasImage && 'brightness(20%)'}}
+          alt="card"
+          onClick={() => navigate("/player")}
+        />
 
-      {isHovered && (
-        <div className="hover">
-          <div className="image-video-container">
-            <img
-              src={hasImage ? `https://image.tmdb.org/t/p/w500${!search ? movieData.image : movieData.backdrop_path}`:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1500px-No-Image-Placeholder.svg.png'}
-              alt="card"
-              onClick={() => navigate("/player")}
-            />
-            <video
-              src={`https://autoembed.to/movie/tmdb/299534`}
-              autoPlay={true}
-              loop
-              muted
-              onClick={() => navigate("/player",{
-                state: { myVariable: '12345' },
-              })}
-            />
-          </div>
-          <div className="info-container flex column">
-            <h3 className="name" onClick={() => navigate("/player")}>
-              {!search || movieData.media_type !== 'movie' ? movieData.name : movieData.title}
-            </h3>
-            <div className="icons flex j-between">
-              <div className="controls flex">
-                <IoPlayCircleSharp
-                  title="Play"
-                  onClick={() => navigate("/player",{
-                    state: { id:movieData.id, type: movieData.type },
-                  })}
-                />
-                <RiThumbUpFill title="Like" color={isLiked || isInLiked ? 'red' : 'white'} onClick={liked}/>
-                {isWatchList || isInWatchList ? (
-                  <BsCheck
-                    title="Remove from List"
-                    onClick={() =>{
-                      dispatch(removeWatchList({movieId: movieData.id}))
-                      setIsWatchList(false)
-                    }
-                    }
+        {isHovered && (
+          <div className="hover">
+            <div className="image-video-container">
+              <img
+                src={hasImage ? `https://image.tmdb.org/t/p/w500${!search ? movieData.image : movieData.backdrop_path}`:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1500px-No-Image-Placeholder.svg.png'}
+                alt="card"
+                onClick={() => navigate("/player")}
+              />
+              <video
+                src={`https://autoembed.to/movie/tmdb/299534`}
+                autoPlay={true}
+                loop
+                muted
+                onClick={() => navigate("/player",{
+                  state: { myVariable: '12345' },
+                })}
+              />
+            </div>
+            <div className="info-container flex column">
+              <h3 className="name" onClick={() => navigate("/player")}>
+                {!search || movieData.media_type !== 'movie' ? movieData.name : movieData.title}
+              </h3>
+              <div className="icons flex j-between">
+                <div className="controls flex">
+                  <IoPlayCircleSharp
+                    title="Play"
+                    onClick={() => navigate("/player",{
+                      state: { id:movieData.id, type: movieData.type ?? movieData.media_type },
+                    })}
                   />
-                ) : (
-                  <AiOutlinePlus title="Add to my list" onClick={
-                    () => {
-                      dispatch(addWatchList({movieData}))
-                      setIsWatchList(true)
-                    }
-                  } />
-                )}
+                  <RiThumbUpFill title="Like" color={isLiked || isInLiked ? 'red' : 'white'} onClick={liked}/>
+                  {isWatchList || isInWatchList ? (
+                    <BsCheck
+                      title="Remove from List"
+                      onClick={() =>{
+                        dispatch(removeWatchList({movieId: movieData.id}))
+                        setIsWatchList(false)
+                      }
+                      }
+                    />
+                  ) : (
+                    <AiOutlinePlus title="Add to my list" onClick={
+                      () => {
+                        dispatch(addWatchList({movieData}))
+                        setIsWatchList(true)
+                      }
+                    } />
+                  )}
+                </div>
+              </div>
+              <div className="genres flex">
+                <ul className="flex">
+                  {!search && movieData.genres.map((genre) => (
+                    <li>{genre}</li>
+                  ))}
+                </ul>
               </div>
             </div>
-            <div className="genres flex">
-              <ul className="flex">
-                {!search && movieData.genres.map((genre) => (
-                  <li>{genre}</li>
-                ))}
-              </ul>
-            </div>
           </div>
-        </div>
-      )}
-    </Container>
+        )}
+      </Container>
+      }
+    </>
   );
 });
 

@@ -17,7 +17,9 @@ export default function Navbar({ isScrolled }) {
 
   const handleSearch = (e) => {
     e.preventDefault()
-    navigate(`/search/${search}`)
+    if(search.length >= 1){
+      navigate(`/search/${search}`)
+    }
   }
   return (
     <Container>
@@ -132,7 +134,7 @@ const Container = styled.div`
         gap: 0.4rem;
         align-items: center;
         justify-content: center;
-        padding: 0.2rem;
+        padding: 0.4rem;
         padding-left: 0.5rem;
         button {
           background-color: transparent;
@@ -160,6 +162,7 @@ const Container = styled.div`
       }
       .show-search {
         border: 1px solid white;
+        border-radius: 5px;
         background-color: rgba(0, 0, 0, 0.6);
         input {
           width: 100%;
