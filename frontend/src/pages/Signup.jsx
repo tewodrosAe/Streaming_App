@@ -27,6 +27,7 @@ function Signup() {
       await createUserWithEmailAndPassword(firebaseAuth, email, password)
       localStorage.setItem('streamer', JSON.stringify(user.data.token))
     } catch (error) {
+      console.log(error)
       setError(error.message.split(' ')[2].replace(/[{()}]/g, '').split('/')[1])
     }
   }
