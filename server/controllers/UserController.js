@@ -8,10 +8,10 @@ const createUser = async(req,res) => {
   const {email} = req.body
   try{
     const user = await User.create({email})
-    const token = createToken(email)
-    res.status(200).json({token})
+    console.log(user)
+    /* const token = createToken(email)
+    res.status(200).json({token}) */
   }catch(e){
-    console.log('here')
     res.status(400).json({error: e})
   }
 }
