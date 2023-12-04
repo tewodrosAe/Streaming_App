@@ -13,7 +13,7 @@ function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState('')
 
-  console.log(process.env.REACT_APP_BACKEND_URL)
+  console.log(process.env.REACT_APP_BACKEND_URL,'hey')
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
