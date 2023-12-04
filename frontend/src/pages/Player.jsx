@@ -13,7 +13,7 @@ export default function Player() {
         {/* <div className="back">
           <BsArrowLeft onClick={() => navigate(-1)} />
         </div> */}
-        <iframe src={`https://vidsrc.to/embed/${type === 'tv' ? 'tv':'movie'}/${id}`} title="yo"autoPlay loop controls muted />
+        <iframe src={`https://vidsrc.to/embed/${type === 'tv' ? 'tv':'movie'}/${id}`} title="yo" allowFullScreen/>
       </div>
     </Container>
   );
