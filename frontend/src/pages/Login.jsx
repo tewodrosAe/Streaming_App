@@ -15,8 +15,8 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const user = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`,{email})
       await signInWithEmailAndPassword(firebaseAuth, email, password);
+      const user = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`,{email})
       localStorage.setItem('streamer', JSON.stringify(user.data.token))
     } catch (error) {
       setError(error.code);

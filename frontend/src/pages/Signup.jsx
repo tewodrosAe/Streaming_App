@@ -23,8 +23,8 @@ function Signup() {
     setError('')
     try {
       const { email, password } = formValues
-      const user = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/create`,{email})
       await createUserWithEmailAndPassword(firebaseAuth, email, password)
+      const user = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/create`,{email})
       localStorage.setItem('streamer', JSON.stringify(user.data.token))
     } catch (error) {
       setError(error.message.split(' ')[2].replace(/[{()}]/g, '').split('/')[1])
@@ -49,39 +49,41 @@ function Signup() {
             </h6>
           </div>
           <form className="form" onSubmit={handleSignIn}>
-            <input
-              type="email"
-              placeholder="Email address"
-              onChange={(e) =>
-                setFormValues({
-                  ...formValues,
-                  [e.target.name]: e.target.value,
-                })
-              }
-              name="email"
-              value={formValues.email}
-              required
-            />
-            {showPassword && (
+            <div className='bottom'>
               <input
-                type="password"
-                placeholder="Password"
+                type="email"
+                placeholder="Email address"
                 onChange={(e) =>
                   setFormValues({
                     ...formValues,
                     [e.target.name]: e.target.value,
                   })
                 }
-                name="password"
-                value={formValues.password}
+                name="email"
+                value={formValues.email}
                 required
               />
-            )}
+              {showPassword && (
+                <input
+                  type="password"
+                  placeholder="Password"
+                  onChange={(e) =>
+                    setFormValues({
+                      ...formValues,
+                      [e.target.name]: e.target.value,
+                    })
+                  }
+                  name="password"
+                  value={formValues.password}
+                  required
+                />
+              )}
+            </div>
             {!showPassword && (
               <button onClick={() => setShowPassword(true)}>Get Started</button>
             )}
             {error !== '' && <div className="error"> * {error} * </div>}
-            {showPassword && <button type='submit'>Signup</button>}
+            {showPassword && <button type='submit' className='sign'>Signup</button>}
           </form>
         </div>
       </div>
@@ -107,6 +109,8 @@ const Container = styled.div`
     .body {
       gap: 1rem;
       .error {
+        margin: 0.5rem  auto;
+        width:fit-content;
         color: rgb(200, 10, 50);
         font-size: 0.9rem;
         background:rgba(0,0,0,0.8);
@@ -129,19 +133,20 @@ const Container = styled.div`
         }
       }
       .form {
+        .bottom{
+          display:flex;
+          gap:1rem;
+        }
         display: grid;
         grid-template-columns: ${({ showPassword }) =>
-          showPassword ? '1fr 1fr' : '2fr 1fr'};
+          showPassword ? '1fr' : '2fr 1fr'};
+        grid-template-rows: 1fr;
         @media only screen and (min-width: 700px){
           width: 50%;
         }
-        @media only screen and (max-width: 480px){
-          display:flex;
-          flex-direction:column;
-          gap:2vh;
-        }
         input {
           color: white;
+          width: 100%;
           padding: 0.8rem;
           background: rgba(0, 0, 0, 0.4);
           font-size: 1rem;
@@ -159,6 +164,23 @@ const Container = styled.div`
           color: white;
           font-weight: bolder;
           font-size: 1.05rem;
+        }
+        .sign{
+          margin:0 auto;
+          margin-top:10px;
+          width:50%;
+          padding: 1rem 1rem;
+        }
+        @media only screen and (max-width: 500px){
+          display:flex;
+          flex-direction:column;
+          gap:2vh;
+          .bottom{
+            flex-direction:column;
+          }
+          button:nth-child(2){
+            width:100%;
+          }
         }
       }
       button {
