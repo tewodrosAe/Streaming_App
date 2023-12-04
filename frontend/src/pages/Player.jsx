@@ -1,15 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { BsArrowLeft } from "react-icons/bs";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 /* import video from "../assets/video.mp4"; */
 
 export default function Player() {
-  const navigate = useNavigate();
   const location = useLocation();
   const id = location.state?.id;
   const type = location.state?.type;
-  console.log(type)
   return (
     <Container>
       <div className="player">

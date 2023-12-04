@@ -7,7 +7,6 @@ import { firebaseAuth } from "../utils/firebase-config";
 import { FaPowerOff, FaSearch } from "react-icons/fa";
 import MobileNav from "./MobileNav";
 import { links } from "../constants";
-import { useDispatch } from "react-redux";
 
 export default function Navbar({ isScrolled }) {
   const [showSearch, setShowSearch] = useState(false);

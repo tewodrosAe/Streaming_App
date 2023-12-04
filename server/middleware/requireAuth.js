@@ -11,7 +11,6 @@ const requireAuth = async(req,res,next) => {
         req.user = {email}
         next()
     }catch(e){
-        console.log(e)
         res.status(401).json({error:'authorization denied'})
     }
 }

@@ -10,6 +10,7 @@ import UserListedMovies from "./pages/UserListedMovies";
 import Search from "./pages/Search";
 import { useDispatch } from "react-redux";
 import { getList } from "./store";
+import Error from "./pages/Error";
 
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
         <Route exact path="/search/:search" element={<Search isScrolled={isScrolled}/>} />
         <Route exact path="/mylist" element={<UserListedMovies />} />
         <Route exact path="/" element={<Showey setIsScrolled={setIsScrolled} isScrolled={isScrolled}/>} />
+        <Route exact path="/*" element={<Error />} />
       </Routes>
     </BrowserRouter>
   );
