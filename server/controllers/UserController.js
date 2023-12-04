@@ -5,7 +5,9 @@ const createToken = (email) => {
   return jwt.sign({email},process.env.JWT_SECRET,{expiresIn: '3d'})
 }
 const createUser = async(req,res) => {
+  console.log('here')
   const {email} = req.body
+  console.log(email)
   try{
     const user = await User.create({email})
     const token = createToken(email)
