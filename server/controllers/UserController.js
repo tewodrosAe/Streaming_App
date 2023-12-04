@@ -11,7 +11,6 @@ const createUser = async(req,res) => {
     const token = createToken(email)
     res.status(200).json({token})
   }catch(e){
-    console.log(e, email)
     res.status(400).json({error: e})
   }
 }
